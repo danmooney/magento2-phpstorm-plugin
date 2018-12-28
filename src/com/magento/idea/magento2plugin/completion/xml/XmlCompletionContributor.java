@@ -2,10 +2,14 @@ package com.magento.idea.magento2plugin.completion.xml;
 
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.notification.NotificationType;
 import com.intellij.patterns.XmlPatterns;
 import com.intellij.psi.xml.XmlTokenType;
 import com.magento.idea.magento2plugin.completion.provider.*;
-
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.notification.Notification;
+import com.intellij.notification.Notifications;
+import org.intellij.lang.regexp.RegExpTT;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static com.intellij.patterns.StandardPatterns.string;
@@ -14,8 +18,11 @@ import static com.intellij.patterns.XmlPatterns.xmlFile;
 public class XmlCompletionContributor extends CompletionContributor {
 
     public XmlCompletionContributor() {
-        System.out.println("ZEBRA MAGENTO LOADING WHOO!");
-        extend(CompletionType.BASIC, psiElement(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN),
+        extend(
+                CompletionType.BASIC,
+                psiElement(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN)
+                    .inFile(xmlFile().withName(string().matches("^(?!.*(/Mftf/Test/)).*$"))),
+
             new CompositeCompletionProvider(
                 new PhpClassCompletionProvider(),
                 new PhpClassMemberCompletionProvider(),
@@ -24,7 +31,10 @@ public class XmlCompletionContributor extends CompletionContributor {
             )
         );
 
-        extend(CompletionType.BASIC, psiElement(XmlTokenType.XML_DATA_CHARACTERS),
+        extend(
+                CompletionType.BASIC,
+                psiElement(XmlTokenType.XML_DATA_CHARACTERS)
+                    .inFile(xmlFile().withName(string().matches("^(?!.*(/Mftf/Test/)).*$"))),
             new CompositeCompletionProvider(
                 new PhpClassCompletionProvider(),
                 new PhpClassMemberCompletionProvider(),
@@ -105,12 +115,24 @@ public class XmlCompletionContributor extends CompletionContributor {
         );
 
         // mftf selector completion contributor
-        extend(CompletionType.BASIC, psiElement(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN)
-            .inside(XmlPatterns.xmlAttribute().withName("selector")
-                    .withValue(string().contains("{{"))
-                    .withValue(string().contains("}}"))
-                    .withParent(XmlPatterns.xmlTag().withName("test"))
-            ),
+        extend(CompletionType.BASIC,
+            psiElement(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN)
+//                .afterLeaf("{{")
+//            psiElement()
+//                .andOr(
+//                        psiElement().
+//                    psiElement().inside(XmlPatterns.xmlAttribute(),
+//                )
+//            )
+            .inside(XmlPatterns.xmlAttribute()
+//                            .afterLeaf("{{")
+//                .withValue(string().contains("{{"))
+
+            )
+            .inFile(xmlFile().withName(string().endsWith("Test.xml"))),
+//            .inFile(xmlFile().withName(string().contains("Test/Mftf/Test"))),
+//                    .inFile(XmlPatterns.psiFile()
+//                        .withName(XmlPatterns.string().contains("Test/Mftf/Test"))),
             new MftfSelectorCompletionProvider()
         );
     }

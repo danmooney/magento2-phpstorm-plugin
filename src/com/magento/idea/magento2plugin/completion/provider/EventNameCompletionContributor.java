@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.indexing.FileBasedIndex;
@@ -19,6 +20,8 @@ public class EventNameCompletionContributor extends CompletionProvider<Completio
                                   ProcessingContext context,
                                   @NotNull CompletionResultSet result) {
         PsiElement position = parameters.getPosition().getOriginalElement();
+
+        Logger.getInstance("pizzatime").info("Event completion working fine!");
 
         Collection<String> eventNames = FileBasedIndex.getInstance()
                 .getAllKeys(EventNameIndex.KEY, position.getProject());

@@ -1,6 +1,7 @@
 package com.magento.idea.magento2plugin.stubs.indexes.mftf;
 
 import com.intellij.ide.highlighter.XmlFileType;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlDocument;
@@ -18,7 +19,9 @@ import java.util.Map;
 
 public class SelectorIndex extends FileBasedIndexExtension<String, String> {
     public static final ID<String, String> KEY = ID.create(
-            "com.magento.idea.magento2plugin.stubs.indexes.mftf.selector_index");
+        "com.magento.idea.magento2plugin.stubs.indexes.mftf.selector_index"
+    );
+
     private final KeyDescriptor<String> myKeyDescriptor = new EnumeratorStringDescriptor();
 
     @NotNull
@@ -69,10 +72,9 @@ public class SelectorIndex extends FileBasedIndexExtension<String, String> {
                     }
 
                     // use keys QA engineer would use; {{AdminCategoryBasicFieldSection.IncludeInMenu}} for example
-                    map.put("{{" + section + "." + element + "}}", selector);
+                    map.put(section + "." + element, selector);
                 }
             }
-
             return map;
         };
     }
@@ -99,8 +101,7 @@ public class SelectorIndex extends FileBasedIndexExtension<String, String> {
     public FileBasedIndex.InputFilter getInputFilter() {
         return file ->
                 file.getFileType() == XmlFileType.INSTANCE &&
-                file.getPath().contains("dev/tests/acceptance/tests/functional") &&
-                file.getPath().contains("Section")
+                file.getPath().contains("Test/Mftf/Section")
             ;
     }
 

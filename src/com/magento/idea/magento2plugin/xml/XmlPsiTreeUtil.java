@@ -1,5 +1,6 @@
 package com.magento.idea.magento2plugin.xml;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.*;
 import gnu.trove.THashSet;
@@ -28,6 +29,8 @@ public class XmlPsiTreeUtil {
             return psiElements;
         }
 
+//        Logger.getInstance("pizzatime").info("Searching for tag: " + tagName + ", with attributeName: " + attributeName + ", in xml file: " + xmlFile.toString());
+
         for (XmlTag tag: rootTag.findSubTags(tagName)) {
             if (tag != null) {
                 XmlAttribute attribute = tag.getAttribute(attributeName);
@@ -45,6 +48,9 @@ public class XmlPsiTreeUtil {
                                                                     String attributeName,
                                                                     String value) {
         Collection<XmlAttributeValue> psiElements = findAttributeValueElements(xmlFile, tagName, attributeName);
+
+        Logger.getInstance("pizzatime").info("Searching for tag: " + tagName + ", with attributeName: " + attributeName + ", with value: " + value + ", in xml file: " + xmlFile.toString());
+
         psiElements.removeIf(e -> e.getValue() == null || !e.getValue().equals(value));
         return psiElements;
     }
